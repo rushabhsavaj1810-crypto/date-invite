@@ -658,32 +658,32 @@ button { cursor:pointer; }
         <em>time</em> &amp; plan
       </h2>
 
-      <form id="dateForm" class="date-form">
+      <form id="dateForm" class="date-form" action="letter.html" method="get">
         <div class="field-grid">
           <label class="field">
             <span>WHICH DAY?</span>
-            <input id="dateInput" type="date" required />
+            <input id="dateInput" name="date" type="date" required />
           </label>
 
           <label class="field">
             <span>WHAT TIME?</span>
-            <input id="timeInput" type="time" required />
+            <input id="timeInput" name="time" type="time" required />
           </label>
         </div>
 
         <fieldset class="plan-options">
           <legend>THE PLAN</legend>
 
-          <button type="button" class="plan-chip" data-plan="Coffee" aria-pressed="false" onclick="choosePlanAndOpenLetter('Coffee', this)">☕ Coffee</button>
-          <button type="button" class="plan-chip" data-plan="A movie" aria-pressed="false" onclick="choosePlanAndOpenLetter('A movie', this)">🎬 A movie</button>
-          <button type="button" class="plan-chip" data-plan="Dinner" aria-pressed="false" onclick="choosePlanAndOpenLetter('Dinner', this)">🍝 Dinner</button>
-          <button type="button" class="plan-chip" data-plan="Walk in the park" aria-pressed="false" onclick="choosePlanAndOpenLetter('Walk in the park', this)">🌳 Walk in the park</button>
-          <button type="button" class="plan-chip" data-plan="Drinks" aria-pressed="false" onclick="choosePlanAndOpenLetter('Drinks', this)">🍸 Drinks</button>
-          <button type="button" class="plan-chip" data-plan="Surprise me" aria-pressed="false" onclick="choosePlanAndOpenLetter('Surprise me', this)">🎁 Surprise me</button>
+          <button type="submit" class="plan-chip" name="plan" value="Coffee">☕ Coffee</button>
+          <button type="submit" class="plan-chip" name="plan" value="A movie">🎬 A movie</button>
+          <button type="submit" class="plan-chip" name="plan" value="Dinner">🍝 Dinner</button>
+          <button type="submit" class="plan-chip" name="plan" value="Walk in the park">🌳 Walk in the park</button>
+          <button type="submit" class="plan-chip" name="plan" value="Drinks">🍸 Drinks</button>
+          <button type="submit" class="plan-chip" name="plan" value="Surprise me">🎁 Surprise me</button>
         </fieldset>
 
-        <button id="submitPlanBtn" type="submit" class="submit-plan-btn">
-          Pick day, time &amp; plan ✍️
+        <button id="submitPlanBtn" type="button" class="submit-plan-btn" onclick="alert('Tap one of the plan buttons above 💌')">
+          Tap a plan to continue 💌
         </button>
       </form>
     </section>
@@ -944,19 +944,7 @@ function choosePlanAndOpenLetter(plan, button) {
 window.choosePlanAndOpenLetter = choosePlanAndOpenLetter;
 
 dateForm.addEventListener("submit", e => {
-  e.preventDefault();
-
-  if (!dateInput.value || !timeInput.value || !chosenPlan) {
-    alert("Choose a day, time and plan first 💌");
-    return;
-  }
-
-  chosenDate = dateInput.value;
-  chosenTime = timeInput.value;
-
-  updateDynamicDetails();
-  updateLetterScreen();
-  showScreen(letterScreen);
+  // Let native form submission open letter.html.
 });
 
 openSurpriseBtn.addEventListener("click", () => {
