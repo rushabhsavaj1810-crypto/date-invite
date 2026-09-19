@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f2e3df">
+<title>A Little Letter For You 💌</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#f6ebe8,#ead6d1);color:#2d2926;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{padding:18px 10px 42px}
+.wrap{max-width:760px;margin:auto}
+.brand{width:max-content;max-width:90%;margin:0 auto 18px;padding:10px 18px;border:1px solid rgba(194,87,70,.35);border-radius:999px;color:#b95749;font-weight:800;letter-spacing:.14em;background:rgba(255,255,255,.45)}
+.card{position:relative;overflow:hidden;background:#fffdf8;border-radius:28px;padding:26px 16px 24px;box-shadow:0 22px 60px rgba(92,61,54,.14)}
+.card:before{content:"";position:absolute;inset:0;opacity:.34;pointer-events:none;background:
+radial-gradient(ellipse at 12% 11%,#e76a5b 0 6px,transparent 7px),
+radial-gradient(ellipse at 31% 18%,#a6ae8b 0 5px,transparent 6px),
+radial-gradient(ellipse at 83% 19%,#e76a5b 0 6px,transparent 7px),
+radial-gradient(ellipse at 15% 36%,#e76a5b 0 6px,transparent 7px),
+radial-gradient(ellipse at 72% 39%,#a6ae8b 0 6px,transparent 7px),
+radial-gradient(ellipse at 90% 52%,#e76a5b 0 6px,transparent 7px),
+radial-gradient(ellipse at 24% 67%,#a6ae8b 0 5px,transparent 6px),
+radial-gradient(ellipse at 63% 70%,#e76a5b 0 6px,transparent 7px),
+radial-gradient(ellipse at 86% 83%,#a6ae8b 0 5px,transparent 6px)}
+.inner{position:relative;z-index:1}
+.heading{width:max-content;max-width:100%;margin:0 auto 20px;padding:10px 16px;border:1px solid rgba(76,70,65,.25);border-radius:999px;font-size:.82rem;font-weight:800;letter-spacing:.16em;color:#54514e;background:rgba(255,255,255,.72)}
+.meta{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-bottom:20px}
+.meta span{padding:10px 13px;border-radius:999px;background:#dfe8d3;border:1px solid rgba(74,94,71,.18);font-weight:800;color:#3c4639;font-size:.92rem}
+.letter{background:rgba(255,255,255,.76);border:1px solid rgba(91,74,67,.1);border-radius:20px;padding:26px 20px;font:1.15rem/1.55 Georgia,"Times New Roman",serif;box-shadow:0 10px 26px rgba(91,69,61,.06)}
+.letter p{margin:0 0 20px}.letter p:last-child{margin-bottom:0}
+.share{display:block;width:min(420px,92%);margin:24px auto 12px;border:0;border-radius:18px;padding:16px 18px;background:#df4e36;color:#fff;font-weight:800;font-size:1.03rem;box-shadow:0 10px 24px rgba(223,78,54,.22)}
+.exit{display:block;margin:0 auto;border:0;background:transparent;color:#b86659;font-weight:800;padding:10px 18px}
+.status{text-align:center;min-height:22px;color:#8b5b52;font-size:.9rem;font-weight:600}
+@media(min-width:650px){.card{padding:38px 40px}.letter{padding:34px 30px;font-size:1.28rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">✿ BUILD WITH EAZO</div>
+  <section class="card">
+    <div class="inner">
+      <div class="heading">A LITTLE LETTER FOR YOU</div>
+      <div class="meta">
+        <span id="dateChip">📅 Date</span>
+        <span id="timeChip">⏰ Time</span>
+        <span id="planChip">💌 Plan</span>
+      </div>
+
+      <div class="letter">
+        <p>Dear you,</p>
+        <p>So... it’s official. It’s a date! 💫</p>
+        <p id="meetLine">Let’s meet soon 💌</p>
+        <p>I promise good vibes, terrible jokes, and my very best self.</p>
+        <p>I already can’t stop smiling. See you there.</p>
+        <p>Yours (a little nervously),</p>
+        <p>— Me 💌</p>
+      </div>
+
+      <button class="share" id="shareBtn" type="button">Share the good news 💌</button>
+      <button class="exit" type="button" onclick="history.back()">Exit ↻</button>
+      <div class="status" id="status"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var params=new URLSearchParams(location.search);
+  var date=params.get("date")||"2026-09-26";
+  var time=params.get("time")||"19:30";
+  var plan=params.get("plan")||"Dinner";
+
+  function planIcon(p){
+    var icons={"Coffee":"☕","A movie":"🎬","Dinner":"🍝","Walk in the park":"🌳","Drinks":"🍸","Surprise me":"🎁"};
+    return icons[p]||"💌";
+  }
+
+  function format(){
+    var bits=date.split("-").map(Number);
+    var tbits=time.split(":").map(Number);
+    var d=new Date(bits[0],bits[1]-1,bits[2],tbits[0],tbits[1]||0,0);
+    var dateText=new Intl.DateTimeFormat("en-AU",{weekday:"long",month:"short",day:"numeric"}).format(d);
+    var timeText=new Intl.DateTimeFormat("en-AU",{hour:"numeric",minute:"2-digit"}).format(d);
+    document.getElementById("dateChip").textContent="📅 "+dateText;
+    document.getElementById("timeChip").textContent="⏰ "+timeText;
+    document.getElementById("planChip").textContent=planIcon(plan)+" "+plan;
+    document.getElementById("meetLine").textContent="Let’s meet "+dateText+" at "+timeText+", for "+plan.toLowerCase()+". "+planIcon(plan);
+
+    var shareText="It’s a date! 💕\n"+dateText+" at "+timeText+"\nPlan: "+plan;
+    document.getElementById("shareBtn").onclick=async function(){
+      try{
+        if(navigator.share){await navigator.share({title:"It’s a date! 💕",text:shareText});document.getElementById("status").textContent="Shared 💕";}
+        else if(navigator.clipboard){await navigator.clipboard.writeText(shareText);document.getElementById("status").textContent="Copied — ready to share 💌";}
+        else{document.getElementById("status").textContent=shareText;}
+      }catch(e){if(e&&e.name!=="AbortError")document.getElementById("status").textContent="Couldn’t open sharing. Try again."}
+    };
+  }
+  format();
+})();
+</script>
+</body>
+</html>
