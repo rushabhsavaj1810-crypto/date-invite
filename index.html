@@ -254,6 +254,109 @@ button { cursor:pointer; }
 .submit-plan-btn { margin-top:8px; background:#bcd8a8; color:#263d2b; }
 .submit-plan-btn:hover { background:#a9ca92; }
 
+/* Letter page shown immediately after choosing a plan */
+.letter-screen {
+  background:rgba(255,253,249,.96);
+  border-radius:34px;
+  border:1px solid rgba(255,255,255,.78);
+  box-shadow:var(--shadow);
+  padding:36px clamp(18px,5vw,46px) 28px;
+  position:relative;
+  overflow:hidden;
+  min-height:680px;
+}
+.letter-screen::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.36;
+  background:
+    radial-gradient(ellipse at 12% 16%, #e46b5d 0 7px, transparent 8px),
+    radial-gradient(ellipse at 22% 28%, #a8b18a 0 6px, transparent 7px),
+    radial-gradient(ellipse at 82% 20%, #e46b5d 0 6px, transparent 7px),
+    radial-gradient(ellipse at 70% 43%, #e46b5d 0 7px, transparent 8px),
+    radial-gradient(ellipse at 35% 55%, #a8b18a 0 6px, transparent 7px),
+    radial-gradient(ellipse at 88% 64%, #e46b5d 0 7px, transparent 8px),
+    radial-gradient(ellipse at 18% 76%, #e46b5d 0 6px, transparent 7px),
+    radial-gradient(ellipse at 61% 84%, #a8b18a 0 6px, transparent 7px);
+}
+.letter-inner { position:relative; z-index:1; }
+.letter-heading-pill {
+  width:max-content;
+  max-width:100%;
+  margin:0 auto 24px;
+  padding:10px 18px;
+  border:1px solid rgba(63,66,58,.28);
+  border-radius:999px;
+  letter-spacing:.16em;
+  font-weight:700;
+  color:#575653;
+  background:rgba(255,255,255,.62);
+  font-size:.78rem;
+}
+.letter-meta {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin:0 auto 26px;
+}
+.letter-meta span {
+  background:#dfe9d3;
+  border:1px solid rgba(75,99,71,.2);
+  color:#3d483c;
+  padding:10px 14px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:.92rem;
+}
+.letter-paper {
+  text-align:left;
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(94,82,76,.11);
+  border-radius:22px;
+  padding:28px 24px;
+  font-family:Georgia,"Times New Roman",serif;
+  color:#2f2a27;
+  line-height:1.48;
+  font-size:clamp(1.05rem,3vw,1.35rem);
+  box-shadow:0 14px 34px rgba(94,72,65,.08);
+}
+.letter-paper p { margin:0 0 20px; }
+.letter-paper p:last-child { margin-bottom:0; }
+.share-news-btn {
+  display:block;
+  width:min(420px,90%);
+  margin:24px auto 14px;
+  border:0;
+  border-radius:18px;
+  background:#df4f37;
+  color:white;
+  font-size:1.05rem;
+  font-weight:800;
+  padding:16px 18px;
+  box-shadow:0 10px 24px rgba(223,79,55,.22);
+  touch-action:manipulation;
+}
+.exit-letter-btn {
+  display:block;
+  margin:0 auto;
+  border:0;
+  background:transparent;
+  color:#ba665a;
+  font-weight:700;
+  padding:10px 18px;
+  touch-action:manipulation;
+}
+.letter-share-status {
+  min-height:22px;
+  text-align:center;
+  color:#8b5c54;
+  font-weight:600;
+  font-size:.9rem;
+}
+
 .puzzle-screen {
   background:
     radial-gradient(circle at 20% 15%,rgba(255,255,255,.24),transparent 25%),
@@ -472,6 +575,9 @@ button { cursor:pointer; }
   .paper-invite { padding:28px 20px; }
   .paper-invite h3 { font-size:3.2rem; }
   .invite-details div { grid-template-columns:90px 1fr; }
+  .letter-screen { padding:28px 12px 24px; border-radius:28px; }
+  .letter-paper { padding:24px 18px; }
+  .letter-meta span { font-size:.83rem; padding:9px 11px; }
 }
 
 </style>
@@ -568,12 +674,12 @@ button { cursor:pointer; }
         <fieldset class="plan-options">
           <legend>THE PLAN</legend>
 
-          <button type="button" class="plan-chip" data-plan="Coffee" aria-pressed="false">☕ Coffee</button>
-          <button type="button" class="plan-chip" data-plan="A movie" aria-pressed="false">🎬 A movie</button>
-          <button type="button" class="plan-chip" data-plan="Dinner" aria-pressed="false">🍝 Dinner</button>
-          <button type="button" class="plan-chip" data-plan="Walk in the park" aria-pressed="false">🌳 Walk in the park</button>
-          <button type="button" class="plan-chip" data-plan="Drinks" aria-pressed="false">🍸 Drinks</button>
-          <button type="button" class="plan-chip" data-plan="Surprise me" aria-pressed="false">🎁 Surprise me</button>
+          <button type="button" class="plan-chip" data-plan="Coffee" aria-pressed="false" onclick="choosePlanAndOpenLetter('Coffee', this)">☕ Coffee</button>
+          <button type="button" class="plan-chip" data-plan="A movie" aria-pressed="false" onclick="choosePlanAndOpenLetter('A movie', this)">🎬 A movie</button>
+          <button type="button" class="plan-chip" data-plan="Dinner" aria-pressed="false" onclick="choosePlanAndOpenLetter('Dinner', this)">🍝 Dinner</button>
+          <button type="button" class="plan-chip" data-plan="Walk in the park" aria-pressed="false" onclick="choosePlanAndOpenLetter('Walk in the park', this)">🌳 Walk in the park</button>
+          <button type="button" class="plan-chip" data-plan="Drinks" aria-pressed="false" onclick="choosePlanAndOpenLetter('Drinks', this)">🍸 Drinks</button>
+          <button type="button" class="plan-chip" data-plan="Surprise me" aria-pressed="false" onclick="choosePlanAndOpenLetter('Surprise me', this)">🎁 Surprise me</button>
         </fieldset>
 
         <button id="submitPlanBtn" type="submit" class="submit-plan-btn">
@@ -582,7 +688,40 @@ button { cursor:pointer; }
       </form>
     </section>
 
-    <!-- STEP 4: PUZZLE -->
+    <!-- STEP 4: LETTER -->
+    <section id="letterScreen" class="screen letter-screen" aria-labelledby="letterScreenTitle">
+      <div class="letter-inner">
+        <p class="letter-heading-pill" id="letterScreenTitle">A LITTLE LETTER FOR YOU</p>
+
+        <div class="letter-meta">
+          <span id="letterDateChip">📅 Saturday, Sep 26</span>
+          <span id="letterTimeChip">⏰ 7:30 PM</span>
+          <span id="letterPlanChip">🍝 Dinner</span>
+        </div>
+
+        <div class="letter-paper">
+          <p>Dear you,</p>
+
+          <p>So... it’s official. It’s a date! 💫</p>
+
+          <p id="letterMeetLine">Let’s meet Saturday, Sep 26 at 7:30 PM, for dinner. 🍝</p>
+
+          <p>I promise good vibes, terrible jokes, and my very best self.</p>
+
+          <p>I already can’t stop smiling. See you there.</p>
+
+          <p>Yours (a little nervously),</p>
+
+          <p>— Me 💌</p>
+        </div>
+
+        <button id="shareNewsBtn" class="share-news-btn" type="button">Share the good news 💌</button>
+        <button id="exitLetterBtn" class="exit-letter-btn" type="button">Exit ↻</button>
+        <p id="letterShareStatus" class="letter-share-status" role="status"></p>
+      </div>
+    </section>
+
+    <!-- STEP 5: PUZZLE -->
     <section id="puzzleScreen" class="screen puzzle-screen" aria-labelledby="puzzleTitle">
       <h2 id="puzzleTitle" class="puzzle-title">Almost there,<br><span id="inviteeNamePuzzle">Naomi</span>…</h2>
       <p class="puzzle-subtitle">A little challenge to unlock your surprise.</p>
@@ -683,6 +822,7 @@ const screens = [...document.querySelectorAll(".screen")];
 const askScreen = document.getElementById("askScreen");
 const confirmedScreen = document.getElementById("confirmedScreen");
 const planScreen = document.getElementById("planScreen");
+const letterScreen = document.getElementById("letterScreen");
 const puzzleScreen = document.getElementById("puzzleScreen");
 const envelopeScreen = document.getElementById("envelopeScreen");
 const finalScreen = document.getElementById("finalScreen");
@@ -696,6 +836,9 @@ const planItBtn = document.getElementById("planItBtn");
 const dateForm = document.getElementById("dateForm");
 const dateInput = document.getElementById("dateInput");
 const timeInput = document.getElementById("timeInput");
+const shareNewsBtn = document.getElementById("shareNewsBtn");
+const exitLetterBtn = document.getElementById("exitLetterBtn");
+const letterShareStatus = document.getElementById("letterShareStatus");
 const openSurpriseBtn = document.getElementById("openSurpriseBtn");
 const puzzleArea = document.getElementById("puzzleArea");
 const puzzleForm = document.getElementById("puzzleForm");
@@ -781,9 +924,24 @@ function selectPlan(button) {
   });
 }
 
-planButtons.forEach(button => {
-  button.addEventListener("click", () => selectPlan(button));
-});
+function choosePlanAndOpenLetter(plan, button) {
+  if (!dateInput.value || !timeInput.value) {
+    alert("Please choose the day and time first 💌");
+    return;
+  }
+
+  chosenDate = dateInput.value;
+  chosenTime = timeInput.value;
+  chosenPlan = plan;
+
+  if (button) selectPlan(button);
+  updateDynamicDetails();
+  updateLetterScreen();
+  showScreen(letterScreen);
+  burstConfetti(["💖","💕","✨","🌸"]);
+}
+
+window.choosePlanAndOpenLetter = choosePlanAndOpenLetter;
 
 dateForm.addEventListener("submit", e => {
   e.preventDefault();
@@ -797,7 +955,8 @@ dateForm.addEventListener("submit", e => {
   chosenTime = timeInput.value;
 
   updateDynamicDetails();
-  showScreen(puzzleScreen);
+  updateLetterScreen();
+  showScreen(letterScreen);
 });
 
 openSurpriseBtn.addEventListener("click", () => {
@@ -893,6 +1052,54 @@ function updateDynamicDetails() {
   document.getElementById("whenFinal").textContent = `${dateLong.toUpperCase()} • ${timeLong.toUpperCase()}`;
   document.getElementById("planFinal").textContent = chosenPlan.toUpperCase();
 }
+
+function planIcon(plan) {
+  return {
+    "Coffee":"☕",
+    "A movie":"🎬",
+    "Dinner":"🍝",
+    "Walk in the park":"🌳",
+    "Drinks":"🍸",
+    "Surprise me":"🎁"
+  }[plan] || "💌";
+}
+
+function updateLetterScreen() {
+  const dt = parseLocalDateTime(chosenDate, chosenTime);
+  const dateChip = new Intl.DateTimeFormat("en-AU", {
+    weekday:"long", month:"short", day:"numeric"
+  }).format(dt);
+  const timeChip = new Intl.DateTimeFormat("en-AU", {
+    hour:"numeric", minute:"2-digit"
+  }).format(dt);
+
+  const planLower = chosenPlan.toLowerCase();
+  document.getElementById("letterDateChip").textContent = "📅 " + dateChip;
+  document.getElementById("letterTimeChip").textContent = "⏰ " + timeChip;
+  document.getElementById("letterPlanChip").textContent = planIcon(chosenPlan) + " " + chosenPlan;
+  document.getElementById("letterMeetLine").textContent =
+    "Let’s meet " + dateChip + " at " + timeChip + ", for " + planLower + ". " + planIcon(chosenPlan);
+}
+
+exitLetterBtn.addEventListener("click", () => showScreen(planScreen));
+
+shareNewsBtn.addEventListener("click", async () => {
+  const text = buildShareText();
+  try {
+    if (navigator.share) {
+      await navigator.share({ title:"It’s a date! 💕", text });
+      letterShareStatus.textContent = "Shared 💕";
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(text);
+      letterShareStatus.textContent = "Copied — ready to share 💌";
+    } else {
+      letterShareStatus.textContent = text;
+    }
+  } catch (err) {
+    if (err && err.name === "AbortError") return;
+    letterShareStatus.textContent = "Couldn’t open sharing. Try again.";
+  }
+});
 
 function buildShareText() {
   const dt = parseLocalDateTime(chosenDate, chosenTime);
