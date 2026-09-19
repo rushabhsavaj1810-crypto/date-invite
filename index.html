@@ -229,22 +229,27 @@ button { cursor:pointer; }
   gap:12px;
 }
 .plan-options legend { width:100%; padding-top:26px; }
-.plan-chip input { position:absolute; opacity:0; pointer-events:none; }
-.plan-chip span {
-  display:block;
-  padding:14px 20px;
-  border-radius:999px;
+.plan-chip {
+  -webkit-appearance:none;
+  appearance:none;
   border:1px solid rgba(73,103,67,.18);
   background:#d9ebcc;
   color:#2c402e;
   font-weight:600;
-  transition:.18s ease;
+  padding:14px 20px;
+  border-radius:999px;
+  transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
 }
-.plan-chip input:checked + span {
+.plan-chip:active { transform:scale(.97); }
+.plan-chip.selected {
   background:#8fb97a;
   color:#17311c;
   transform:translateY(-2px);
   box-shadow:0 8px 18px rgba(80,115,71,.18);
+  border-color:rgba(73,103,67,.38);
 }
 .submit-plan-btn { margin-top:8px; background:#bcd8a8; color:#263d2b; }
 .submit-plan-btn:hover { background:#a9ca92; }
@@ -563,35 +568,12 @@ button { cursor:pointer; }
         <fieldset class="plan-options">
           <legend>THE PLAN</legend>
 
-          <label class="plan-chip">
-            <input type="radio" name="plan" value="Coffee" required />
-            <span>☕ Coffee</span>
-          </label>
-
-          <label class="plan-chip">
-            <input type="radio" name="plan" value="A movie" />
-            <span>🎬 A movie</span>
-          </label>
-
-          <label class="plan-chip">
-            <input type="radio" name="plan" value="Dinner" />
-            <span>🍝 Dinner</span>
-          </label>
-
-          <label class="plan-chip">
-            <input type="radio" name="plan" value="Walk in the park" />
-            <span>🌳 Walk in the park</span>
-          </label>
-
-          <label class="plan-chip">
-            <input type="radio" name="plan" value="Drinks" />
-            <span>🍸 Drinks</span>
-          </label>
-
-          <label class="plan-chip">
-            <input type="radio" name="plan" value="Surprise me" />
-            <span>🎁 Surprise me</span>
-          </label>
+          <button type="button" class="plan-chip" data-plan="Coffee" aria-pressed="false">☕ Coffee</button>
+          <button type="button" class="plan-chip" data-plan="A movie" aria-pressed="false">🎬 A movie</button>
+          <button type="button" class="plan-chip" data-plan="Dinner" aria-pressed="false">🍝 Dinner</button>
+          <button type="button" class="plan-chip" data-plan="Walk in the park" aria-pressed="false">🌳 Walk in the park</button>
+          <button type="button" class="plan-chip" data-plan="Drinks" aria-pressed="false">🍸 Drinks</button>
+          <button type="button" class="plan-chip" data-plan="Surprise me" aria-pressed="false">🎁 Surprise me</button>
         </fieldset>
 
         <button id="submitPlanBtn" type="submit" class="submit-plan-btn">
@@ -737,7 +719,7 @@ timeInput.value = CONFIG.defaultTime;
 let dodgeCount = 0;
 let chosenDate = CONFIG.defaultDate;
 let chosenTime = CONFIG.defaultTime;
-let chosenPlan = "Dinner";
+let chosenPlan = "";
 
 const dodgeMessages = [
   "Nice try — it dodged you.",
@@ -788,18 +770,31 @@ yesBtn.addEventListener("click", () => {
 
 planItBtn.addEventListener("click", () => showScreen(planScreen));
 
+const planButtons = [...document.querySelectorAll(".plan-chip")];
+
+function selectPlan(button) {
+  chosenPlan = button.dataset.plan || "";
+  planButtons.forEach(btn => {
+    const selected = btn === button;
+    btn.classList.toggle("selected", selected);
+    btn.setAttribute("aria-pressed", selected ? "true" : "false");
+  });
+}
+
+planButtons.forEach(button => {
+  button.addEventListener("click", () => selectPlan(button));
+});
+
 dateForm.addEventListener("submit", e => {
   e.preventDefault();
 
-  const selectedPlan = document.querySelector('input[name="plan"]:checked');
-  if (!dateInput.value || !timeInput.value || !selectedPlan) {
+  if (!dateInput.value || !timeInput.value || !chosenPlan) {
     alert("Choose a day, time and plan first 💌");
     return;
   }
 
   chosenDate = dateInput.value;
   chosenTime = timeInput.value;
-  chosenPlan = selectedPlan.value;
 
   updateDynamicDetails();
   showScreen(puzzleScreen);
@@ -848,7 +843,11 @@ restartBtn.addEventListener("click", () => {
   puzzleArea.classList.add("hidden");
   puzzleHint.textContent = "";
   puzzleAnswer.value = "";
-  document.querySelectorAll('input[name="plan"]').forEach(r => r.checked = false);
+  chosenPlan = "";
+  planButtons.forEach(btn => {
+    btn.classList.remove("selected");
+    btn.setAttribute("aria-pressed", "false");
+  });
   showScreen(askScreen);
 });
 
