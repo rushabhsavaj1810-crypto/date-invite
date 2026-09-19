@@ -869,8 +869,17 @@ const dodgeMessages = [
   "Faster than romance.",
   "No is wilting…",
   "Yes is blooming, hm? 🌸",
-  "So shy.",
-  "Okay, that button is committed."
+  "Last chance… 👀",
+  "So shy."
+];
+
+const dodgeButtonLabels = [
+  "Sure?",
+  "Wait—",
+  "Think again!",
+  "Last chance?",
+  "Maybe?",
+  "Nice try"
 ];
 
 function showScreen(screen) {
@@ -884,6 +893,7 @@ function dodgeNoButton() {
   dodgeBadge.hidden = false;
   dodgeBadge.textContent = `${dodgeCount} ${dodgeCount === 1 ? "dodge" : "dodges"}`;
   teaseText.textContent = dodgeMessages[Math.min(dodgeCount - 1, dodgeMessages.length - 1)];
+  noBtn.textContent = dodgeButtonLabels[Math.min(dodgeCount - 1, dodgeButtonLabels.length - 1)];
 
   const zoneRect = choiceZone.getBoundingClientRect();
   const btnRect = noBtn.getBoundingClientRect();
@@ -899,12 +909,22 @@ function dodgeNoButton() {
   noBtn.style.transform = `rotate(${(Math.random() * 14) - 7}deg)`;
 }
 
-["mouseenter", "pointerdown", "touchstart"].forEach(evt => {
-  noBtn.addEventListener(evt, e => {
+// On phones, one tap = one dodge. On desktop, the button dodges when hovered.
+noBtn.addEventListener("pointerdown", e => {
+  if (e.pointerType === "touch" || e.pointerType === "pen") {
     e.preventDefault();
     dodgeNoButton();
-  }, { passive: false });
+  }
+}, { passive: false });
+
+noBtn.addEventListener("mouseenter", e => {
+  if (!window.matchMedia("(pointer: coarse)").matches) {
+    e.preventDefault();
+    dodgeNoButton();
+  }
 });
+
+noBtn.addEventListener("click", e => e.preventDefault());
 
 yesBtn.addEventListener("click", () => {
   burstConfetti(["💖","✨","💕","🌸"]);
@@ -985,6 +1005,7 @@ restartBtn.addEventListener("click", () => {
   dodgeCount = 0;
   dodgeBadge.hidden = true;
   teaseText.textContent = "Catch No if you can.";
+  noBtn.textContent = "No";
   noBtn.removeAttribute("style");
   envelopeBtn.classList.remove("open");
   puzzleArea.classList.add("hidden");
