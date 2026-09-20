@@ -889,13 +889,6 @@ function showScreen(screen) {
 }
 
 function dodgeNoButton() {
-  // Prevent the tap that moved "No" from falling through onto YES.
-  yesBtn.style.pointerEvents = "none";
-  clearTimeout(window.__yesReenableTimer);
-  window.__yesReenableTimer = setTimeout(() => {
-    yesBtn.style.pointerEvents = "";
-  }, 450);
-
   dodgeCount += 1;
   dodgeBadge.hidden = false;
   dodgeBadge.textContent = `${dodgeCount} ${dodgeCount === 1 ? "dodge" : "dodges"}`;
@@ -916,34 +909,22 @@ function dodgeNoButton() {
   noBtn.style.transform = `rotate(${(Math.random() * 14) - 7}deg)`;
 }
 
-// On phones, one tap = one dodge. On desktop, the button dodges when hovered.
-noBtn.addEventListener("pointerdown", e => {
-  if (e.pointerType === "touch" || e.pointerType === "pen") {
-    e.preventDefault();
-    e.stopPropagation();
-    try { noBtn.setPointerCapture(e.pointerId); } catch (_) {}
-    dodgeNoButton();
-  }
-}, { passive: false });
-
-noBtn.addEventListener("pointerup", e => {
-  e.preventDefault();
-  e.stopPropagation();
-  try { noBtn.releasePointerCapture(e.pointerId); } catch (_) {}
-}, { passive: false });
-
-noBtn.addEventListener("mouseenter", e => {
-  if (!window.matchMedia("(pointer: coarse)").matches) {
-    e.preventDefault();
-    e.stopPropagation();
-    dodgeNoButton();
-  }
-});
-
-noBtn.addEventListener("click", e => {
+/*
+  Important mobile fix:
+  Move the No button only AFTER the browser has completed the tap/click.
+  We do not move it on touchstart/pointerdown, so the finger release can
+  never fall through to the YES button underneath.
+*/
+noBtn.addEventListener("click", function (e) {
   e.preventDefault();
   e.stopPropagation();
   if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+
+  setTimeout(function () {
+    dodgeNoButton();
+  }, 0);
+
+  return false;
 });
 
 yesBtn.addEventListener("click", () => {
