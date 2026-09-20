@@ -889,6 +889,13 @@ function showScreen(screen) {
 }
 
 function dodgeNoButton() {
+  // Prevent the tap that moved "No" from falling through onto YES.
+  yesBtn.style.pointerEvents = "none";
+  clearTimeout(window.__yesReenableTimer);
+  window.__yesReenableTimer = setTimeout(() => {
+    yesBtn.style.pointerEvents = "";
+  }, 450);
+
   dodgeCount += 1;
   dodgeBadge.hidden = false;
   dodgeBadge.textContent = `${dodgeCount} ${dodgeCount === 1 ? "dodge" : "dodges"}`;
@@ -913,18 +920,31 @@ function dodgeNoButton() {
 noBtn.addEventListener("pointerdown", e => {
   if (e.pointerType === "touch" || e.pointerType === "pen") {
     e.preventDefault();
+    e.stopPropagation();
+    try { noBtn.setPointerCapture(e.pointerId); } catch (_) {}
     dodgeNoButton();
   }
+}, { passive: false });
+
+noBtn.addEventListener("pointerup", e => {
+  e.preventDefault();
+  e.stopPropagation();
+  try { noBtn.releasePointerCapture(e.pointerId); } catch (_) {}
 }, { passive: false });
 
 noBtn.addEventListener("mouseenter", e => {
   if (!window.matchMedia("(pointer: coarse)").matches) {
     e.preventDefault();
+    e.stopPropagation();
     dodgeNoButton();
   }
 });
 
-noBtn.addEventListener("click", e => e.preventDefault());
+noBtn.addEventListener("click", e => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+});
 
 yesBtn.addEventListener("click", () => {
   burstConfetti(["💖","✨","💕","🌸"]);
