@@ -892,8 +892,8 @@ function dodgeNoButton() {
   dodgeCount += 1;
   dodgeBadge.hidden = false;
   dodgeBadge.textContent = `${dodgeCount} ${dodgeCount === 1 ? "dodge" : "dodges"}`;
-  teaseText.textContent = dodgeMessages[Math.min(dodgeCount - 1, dodgeMessages.length - 1)];
-  noBtn.textContent = dodgeButtonLabels[Math.min(dodgeCount - 1, dodgeButtonLabels.length - 1)];
+  teaseText.textContent = dodgeMessages[(dodgeCount - 1) % dodgeMessages.length];
+  noBtn.textContent = dodgeButtonLabels[(dodgeCount - 1) % dodgeButtonLabels.length];
 
   const zoneRect = choiceZone.getBoundingClientRect();
   const btnRect = noBtn.getBoundingClientRect();
