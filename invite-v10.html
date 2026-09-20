@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f3e6e3" />
+  <title>A Tiny Ask 💌 — V10</title>
+<style>
+* { box-sizing: border-box; }
+
+:root {
+  --paper:#fffdf9;
+  --blush:#f3e6e3;
+  --blush-deep:#ead5d0;
+  --ink:#1f1d1b;
+  --muted:#66615e;
+  --red:#d95a49;
+  --red-dark:#b9473a;
+  --green:#cfe6bd;
+  --green-dark:#23452e;
+  --border:rgba(74,56,51,.16);
+  --shadow:0 26px 80px rgba(95,70,63,.14);
+}
+
+html { min-height:100%; background:var(--blush); }
+body {
+  margin:0;
+  min-height:100vh;
+  font-family:"DM Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.72),transparent 40%),
+    linear-gradient(180deg,#f6ebe8 0%,#ecd9d5 100%);
+  overflow-x:hidden;
+}
+
+button,input { font:inherit; }
+button { cursor:pointer; }
+
+.page-shell {
+  width:min(900px,100%);
+  min-height:100vh;
+  margin:0 auto;
+  padding:42px 16px 64px;
+  position:relative;
+}
+
+.brand-pill,.mini-pill {
+  width:max-content;
+  margin:0 auto 30px;
+  padding:10px 18px;
+  border:1px solid rgba(188,92,78,.36);
+  border-radius:999px;
+  color:#b9584c;
+  font-weight:700;
+  letter-spacing:.16em;
+  font-size:.84rem;
+  background:rgba(255,255,255,.36);
+}
+
+.brand-flower { margin-right:7px; }
+.screen { display:none; animation:fadeUp .45s ease both; }
+.screen.active { display:block; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(14px); }
+  to { opacity:1; transform:none; }
+}
+
+.ask-screen {
+  position:relative;
+  background:rgba(255,253,249,.92);
+  min-height:680px;
+  border-radius:34px;
+  border:1px solid rgba(255,255,255,.7);
+  box-shadow:var(--shadow);
+  padding:48px 26px 30px;
+  overflow:hidden;
+}
+
+.eyebrow {
+  text-align:center;
+  font-weight:600;
+  letter-spacing:.18em;
+  color:#5d5a57;
+  margin:0 0 16px;
+}
+
+.hero-title,.confirmed-title,.plan-title,.puzzle-title,.final-card-romance>h2 {
+  font-family:"Playfair Display",Georgia,serif;
+  font-weight:600;
+  line-height:.95;
+  letter-spacing:-.045em;
+}
+
+.hero-title {
+  font-size:clamp(3.7rem,10vw,6rem);
+  text-align:center;
+  margin:0;
+}
+.hero-title em,.confirmed-title em,.plan-title em { color:var(--red); font-weight:600; }
+
+.tease-text {
+  text-align:center;
+  color:var(--muted);
+  font-size:1.18rem;
+  margin:24px 0 4px;
+}
+
+.flower-wrap { width:230px; margin:5px auto -10px; }
+.flower-wrap.compact { width:185px; margin-top:-12px; }
+.flower { width:100%; display:block; }
+
+.choice-zone {
+  position:relative;
+  height:114px;
+  width:min(650px,100%);
+  margin:0 auto;
+}
+
+.yes-btn {
+  position:absolute;
+  left:0; bottom:0;
+  width:76%;
+  height:92px;
+  border:0;
+  border-radius:25px;
+  background:var(--green);
+  color:#183723;
+  font-size:2rem;
+  font-weight:800;
+  letter-spacing:.04em;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.03);
+  z-index:1;
+}
+
+.no-btn {
+  position:absolute;
+  right:2%; top:9px;
+  min-width:82px;
+  height:58px;
+  border:1px solid rgba(214,104,91,.28);
+  background:#fffefa;
+  color:#c75c4e;
+  border-radius:17px;
+  font-weight:700;
+  box-shadow:0 8px 24px rgba(93,62,55,.08);
+  z-index:5;
+  transition:left .16s ease,top .16s ease,transform .16s ease;
+}
+
+.dodge-badge {
+  position:absolute;
+  right:22px; top:18px;
+  padding:9px 15px;
+  border:1px solid rgba(214,104,91,.28);
+  background:#fffaf6;
+  color:#bc5f52;
+  border-radius:999px;
+  font-weight:700;
+}
+
+.confirmation-card,.plan-screen,.puzzle-screen,.final-card-romance {
+  background:rgba(255,253,249,.92);
+  border-radius:34px;
+  border:1px solid rgba(255,255,255,.7);
+  box-shadow:var(--shadow);
+  padding:52px clamp(22px,6vw,62px);
+  text-align:center;
+}
+
+.confirmed-title {
+  font-size:clamp(3rem,8vw,5.5rem);
+  margin:12px 0 0;
+}
+.taste-line { font-size:1.25rem; color:#4e4b48; margin:4px 0 26px; }
+
+.primary-red-btn,.submit-plan-btn,.open-surprise-btn,.puzzle-submit {
+  border:0;
+  background:var(--red);
+  color:white;
+  border-radius:18px;
+  font-weight:700;
+  padding:18px 26px;
+  box-shadow:0 10px 28px rgba(217,90,73,.24);
+}
+.primary-red-btn:hover,.submit-plan-btn:hover,.open-surprise-btn:hover,.puzzle-submit:hover { background:var(--red-dark); }
+
+.plan-title {
+  font-size:clamp(3.2rem,8vw,5.4rem);
+  margin:4px 0 36px;
+}
+.plan-screen .mini-pill { color:#5b5854; border-color:var(--border); }
+.mobile-break { display:none; }
+
+.date-form { max-width:720px; margin:auto; }
+.field-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+  text-align:left;
+}
+.field span,.plan-options legend {
+  display:block;
+  font-weight:700;
+  letter-spacing:.12em;
+  margin-bottom:12px;
+  color:#514e4b;
+}
+.field input,.puzzle-form input {
+  width:100%;
+  height:62px;
+  border:1px solid rgba(67,57,54,.16);
+  background:#fffefa;
+  border-radius:18px;
+  padding:0 18px;
+  color:#363331;
+  font-size:1.05rem;
+  outline:none;
+}
+.field input:focus,.puzzle-form input:focus { border-color:rgba(217,90,73,.58); box-shadow:0 0 0 4px rgba(217,90,73,.08); }
+
+.plan-options {
+  border:0;
+  padding:34px 0 24px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+}
+.plan-options legend { width:100%; padding-top:26px; }
+.plan-chip {
+  -webkit-appearance:none;
+  appearance:none;
+  border:1px solid rgba(73,103,67,.18);
+  background:#d9ebcc;
+  color:#2c402e;
+  font-weight:600;
+  padding:14px 20px;
+  border-radius:999px;
+  transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
+}
+.plan-chip:active { transform:scale(.97); }
+.plan-chip.selected {
+  background:#8fb97a;
+  color:#17311c;
+  transform:translateY(-2px);
+  box-shadow:0 8px 18px rgba(80,115,71,.18);
+  border-color:rgba(73,103,67,.38);
+}
+.submit-plan-btn { margin-top:8px; background:#bcd8a8; color:#263d2b; }
+.submit-plan-btn:hover { background:#a9ca92; }
+
+/* Letter page shown immediately after choosing a plan */
+.letter-screen {
+  background:rgba(255,253,249,.96);
+  border-radius:34px;
+  border:1px solid rgba(255,255,255,.78);
+  box-shadow:var(--shadow);
+  padding:36px clamp(18px,5vw,46px) 28px;
+  position:relative;
+  overflow:hidden;
+  min-height:680px;
+}
+.letter-screen::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.36;
+  background:
+    radial-gradient(ellipse at 12% 16%, #e46b5d 0 7px, transparent 8px),
+    radial-gradient(ellipse at 22% 28%, #a8b18a 0 6px, transparent 7px),
+    radial-gradient(ellipse at 82% 20%, #e46b5d 0 6px, transparent 7px),
+    radial-gradient(ellipse at 70% 43%, #e46b5d 0 7px, transparent 8px),
+    radial-gradient(ellipse at 35% 55%, #a8b18a 0 6px, transparent 7px),
+    radial-gradient(ellipse at 88% 64%, #e46b5d 0 7px, transparent 8px),
+    radial-gradient(ellipse at 18% 76%, #e46b5d 0 6px, transparent 7px),
+    radial-gradient(ellipse at 61% 84%, #a8b18a 0 6px, transparent 7px);
+}
+.letter-inner { position:relative; z-index:1; }
+.letter-heading-pill {
+  width:max-content;
+  max-width:100%;
+  margin:0 auto 24px;
+  padding:10px 18px;
+  border:1px solid rgba(63,66,58,.28);
+  border-radius:999px;
+  letter-spacing:.16em;
+  font-weight:700;
+  color:#575653;
+  background:rgba(255,255,255,.62);
+  font-size:.78rem;
+}
+.letter-meta {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin:0 auto 26px;
+}
+.letter-meta span {
+  background:#dfe9d3;
+  border:1px solid rgba(75,99,71,.2);
+  color:#3d483c;
+  padding:10px 14px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:.92rem;
+}
+.letter-paper {
+  text-align:left;
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(94,82,76,.11);
+  border-radius:22px;
+  padding:28px 24px;
+  font-family:Georgia,"Times New Roman",serif;
+  color:#2f2a27;
+  line-height:1.48;
+  font-size:clamp(1.05rem,3vw,1.35rem);
+  box-shadow:0 14px 34px rgba(94,72,65,.08);
+}
+.letter-paper p { margin:0 0 20px; }
+.letter-paper p:last-child { margin-bottom:0; }
+.share-news-btn {
+  display:block;
+  width:min(420px,90%);
+  margin:24px auto 14px;
+  border:0;
+  border-radius:18px;
+  background:#df4f37;
+  color:white;
+  font-size:1.05rem;
+  font-weight:800;
+  padding:16px 18px;
+  box-shadow:0 10px 24px rgba(223,79,55,.22);
+  touch-action:manipulation;
+}
+.exit-letter-btn {
+  display:block;
+  margin:0 auto;
+  border:0;
+  background:transparent;
+  color:#ba665a;
+  font-weight:700;
+  padding:10px 18px;
+  touch-action:manipulation;
+}
+.letter-share-status {
+  min-height:22px;
+  text-align:center;
+  color:#8b5c54;
+  font-weight:600;
+  font-size:.9rem;
+}
+
+.puzzle-screen {
+  background:
+    radial-gradient(circle at 20% 15%,rgba(255,255,255,.24),transparent 25%),
+    radial-gradient(circle at 80% 90%,rgba(255,255,255,.2),transparent 20%),
+    linear-gradient(180deg,#cf775f,#d87b65);
+  color:#fffaf6;
+}
+.puzzle-title { font-size:clamp(3.4rem,9vw,6rem); margin:10px 0 20px; }
+.puzzle-subtitle { opacity:.9; font-size:1.1rem; }
+.glass-cube {
+  width:200px;
+  height:200px;
+  margin:42px auto 34px;
+  border:2px solid rgba(255,255,255,.72);
+  border-radius:24px;
+  position:relative;
+  transform:rotate(4deg);
+  box-shadow:
+    inset 18px 18px 38px rgba(255,255,255,.12),
+    inset -20px -20px 40px rgba(106,47,39,.16),
+    0 30px 40px rgba(85,43,37,.18);
+}
+.glass-cube::before,.glass-cube::after {
+  content:"";
+  position:absolute;
+  inset:16px;
+  border:1px solid rgba(255,255,255,.4);
+  border-radius:18px;
+  transform:rotate(-8deg);
+}
+.glass-cube::after { inset:32px; transform:rotate(11deg); opacity:.6; }
+.cube-dot { position:absolute; font-size:1.6rem; color:#fff4b6; text-shadow:0 0 16px rgba(255,244,182,.7); }
+.dot-a { left:30px; bottom:30px; }
+.dot-b { right:35px; top:36px; }
+.dot-c { right:24px; bottom:54px; }
+
+.open-surprise-btn { background:rgba(110,61,48,.82); }
+.open-surprise-btn:hover { background:rgba(95,49,38,.95); }
+
+.puzzle-area {
+  max-width:560px;
+  margin:34px auto 0;
+  padding:26px;
+  border-radius:24px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  backdrop-filter:blur(10px);
+}
+.hidden { display:none !important; }
+.puzzle-area h3 { margin:0 0 10px; font-size:1.5rem; }
+.puzzle-copy { margin:0 0 18px; }
+.puzzle-form { display:flex; gap:10px; }
+.puzzle-form input { flex:1; }
+.puzzle-submit { background:#6f3d31; }
+.puzzle-hint { min-height:24px; margin:12px 0 0; font-weight:600; }
+
+.envelope-screen {
+  min-height:720px;
+  border-radius:34px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(255,255,255,.2),transparent 18%),
+    radial-gradient(circle at 82% 22%,rgba(255,255,255,.17),transparent 18%),
+    linear-gradient(160deg,#bf654e 0%,#cf7259 48%,#c86750 100%);
+  box-shadow:var(--shadow);
+  position:relative;
+}
+.envelope-stage {
+  min-height:720px;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  padding:40px 20px;
+  position:relative;
+}
+.envelope-button {
+  width:min(680px,92vw);
+  aspect-ratio:1.45;
+  border:0;
+  background:transparent;
+  position:relative;
+  perspective:1000px;
+  filter:drop-shadow(0 30px 34px rgba(68,33,27,.28));
+}
+.envelope-back,.envelope-front,.envelope-flap,.letter-card {
+  position:absolute;
+  left:0; right:0; margin:auto;
+}
+.envelope-back {
+  bottom:0; width:100%; height:76%;
+  background:#fffaf3;
+  border-radius:12px 12px 24px 24px;
+}
+.envelope-front {
+  bottom:0; width:100%; height:72%;
+  background:linear-gradient(145deg,#f5e8d9,#fff9ef);
+  clip-path:polygon(0 15%,50% 60%,100% 15%,100% 100%,0 100%);
+  z-index:3;
+  border-radius:0 0 24px 24px;
+}
+.envelope-flap {
+  top:22%; width:100%; height:58%;
+  background:#f1dfcd;
+  clip-path:polygon(0 0,50% 70%,100% 0);
+  transform-origin:top;
+  transition:transform .8s cubic-bezier(.2,.7,.2,1);
+  z-index:4;
+}
+.letter-card {
+  width:80%;
+  height:74%;
+  bottom:7%;
+  background:#fffdf8;
+  border-radius:10px;
+  z-index:2;
+  padding:30px 26px;
+  transition:transform .85s cubic-bezier(.18,.8,.2,1),z-index .1s .35s;
+  color:#222;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:10px;
+  text-align:center;
+  font-family:"Playfair Display",Georgia,serif;
+}
+.envelope-button.open .envelope-flap { transform:rotateX(180deg); z-index:1; }
+.envelope-button.open .letter-card { transform:translateY(-46%); z-index:5; }
+.letter-flower { font-size:2.6rem; }
+.letter-line { font-family:"DM Sans",sans-serif; font-size:1rem; color:#4b4743; }
+.letter-line.strong { font-family:"Playfair Display",Georgia,serif; font-size:2rem; color:#26211e; }
+.envelope-prompt { color:#fff3ed; margin-top:30px; font-weight:600; letter-spacing:.04em; }
+
+.heart-float { position:absolute; font-size:2.6rem; animation:float 3s ease-in-out infinite; }
+.h1 { left:10%; top:20%; }
+.h2 { right:10%; top:28%; animation-delay:.6s; }
+.h3 { left:14%; bottom:20%; animation-delay:1.2s; }
+@keyframes float { 50% { transform:translateY(-18px) rotate(8deg); } }
+
+.final-screen { color:white; }
+.final-card-romance {
+  background:linear-gradient(180deg,#cf7059,#bc604c);
+  padding-top:40px;
+}
+.final-card-romance>h2 { font-size:clamp(3.4rem,9vw,6rem); margin:0; color:#fffaf7; }
+.small-heart { font-size:3rem; margin:6px 0 20px; }
+.paper-invite {
+  max-width:520px;
+  margin:0 auto 26px;
+  padding:34px 34px 30px;
+  background:#fffaf1;
+  color:#2a2522;
+  border-radius:4px;
+  box-shadow:0 25px 42px rgba(63,31,26,.22);
+  transform:rotate(-1.5deg);
+}
+.invite-kicker { letter-spacing:.16em; font-size:.72rem; margin:0 0 5px; }
+.paper-invite h3 {
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:4rem;
+  line-height:1;
+  margin:0 0 10px;
+  color:#d15d4c;
+}
+.invite-note { font-family:"Playfair Display",Georgia,serif; font-size:1.3rem; }
+.invite-rule { height:1px; background:#c95f50; opacity:.55; margin:22px 0; }
+.invite-details { text-align:left; display:grid; gap:16px; }
+.invite-details div { display:grid; grid-template-columns:110px 1fr; gap:10px; align-items:start; }
+.invite-details span { font-size:.7rem; letter-spacing:.14em; color:#8e5c52; font-weight:700; }
+.invite-details strong { font-size:.78rem; letter-spacing:.08em; }
+.signature-wrap { text-align:right; }
+.signature-wrap span { display:block; font-size:.68rem; letter-spacing:.14em; color:#8e5c52; }
+.signature-wrap strong { display:block; font-family:"Playfair Display",Georgia,serif; font-size:2rem; margin-top:2px; }
+
+.final-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+.secondary-btn {
+  border:1px solid rgba(255,255,255,.32);
+  background:rgba(255,255,255,.15);
+  color:white;
+  border-radius:16px;
+  padding:14px 18px;
+  font-weight:700;
+  backdrop-filter:blur(10px);
+}
+.copy-status { min-height:24px; color:#fff5ef; }
+
+.confetti-layer { position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:50; }
+.confetti {
+  position:absolute;
+  top:-30px;
+  animation:confettiFall 2.8s linear forwards;
+}
+@keyframes confettiFall {
+  to { transform:translateY(110vh) rotate(540deg); opacity:.3; }
+}
+
+.sr-only {
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+
+@media (max-width:650px) {
+  .page-shell { padding:20px 10px 34px; }
+  .brand-pill { margin-bottom:18px; }
+  .ask-screen,.confirmation-card,.plan-screen,.puzzle-screen,.final-card-romance { border-radius:28px; }
+  .ask-screen { padding:38px 14px 24px; min-height:650px; }
+  .hero-title { font-size:clamp(3.5rem,17vw,5rem); }
+  .yes-btn { width:82%; height:82px; font-size:1.7rem; }
+  .no-btn { min-width:68px; }
+  .flower-wrap { width:205px; }
+  .field-grid { grid-template-columns:1fr; }
+  .mobile-break { display:block; }
+  .puzzle-form { flex-direction:column; }
+  .envelope-screen,.envelope-stage { min-height:600px; }
+  .letter-card { padding:18px; }
+  .letter-line.strong { font-size:1.55rem; }
+  .paper-invite { padding:28px 20px; }
+  .paper-invite h3 { font-size:3.2rem; }
+  .invite-details div { grid-template-columns:90px 1fr; }
+  .letter-screen { padding:28px 12px 24px; border-radius:28px; }
+  .letter-paper { padding:24px 18px; }
+  .letter-meta span { font-size:.83rem; padding:9px 11px; }
+}
+
+
+/* ===== V9: DATE/TIME ALIGNMENT ONLY ===== */
+.date-form,
+.field-grid,
+.field {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.field-grid {
+  width: 100%;
+}
+
+.field {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.field input[type="date"],
+.field input[type="time"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (max-width:650px) {
+  .plan-screen {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .field-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .field input[type="date"],
+  .field input[type="time"] {
+    height: 58px;
+    border-radius: 16px;
+    font-size: 1rem;
+  }
+}
+
+
+/* ===== V10 CLEAN MOBILE ALIGNMENT ===== */
+html, body {
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+}
+
+.page-shell {
+  width:100%;
+  max-width:760px;
+  margin:0 auto;
+  padding-left:12px;
+  padding-right:12px;
+}
+
+.brand-pill {
+  width:fit-content;
+  max-width:100%;
+  text-align:center;
+  white-space:normal;
+  line-height:1.25;
+}
+
+/* Keep the plan buttons' original compact pill style */
+.plan-options {
+  display:flex !important;
+  flex-wrap:wrap !important;
+  justify-content:center !important;
+  gap:12px !important;
+}
+
+.plan-chip {
+  width:auto !important;
+  min-width:0 !important;
+  max-width:100% !important;
+}
+
+/* Clean plan page proportions */
+.plan-screen {
+  width:100%;
+  max-width:100%;
+  margin:0 auto;
+  overflow:hidden;
+}
+
+.date-form {
+  width:100%;
+  max-width:680px;
+  margin:0 auto;
+}
+
+.field-grid {
+  width:100%;
+  max-width:100%;
+  min-width:0;
+}
+
+.field {
+  display:block;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  overflow:hidden;
+}
+
+.field span {
+  width:100%;
+}
+
+/* iPhone-safe date & time controls */
+.field input[type="date"],
+.field input[type="time"] {
+  -webkit-appearance:none;
+  appearance:none;
+  display:block;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  height:60px;
+  margin:0;
+  padding:0 16px;
+  border:1px solid rgba(67,57,54,.16);
+  border-radius:17px;
+  background:#fffefa;
+  color:#363331;
+  text-align:center;
+  text-align-last:center;
+  box-sizing:border-box;
+  overflow:hidden;
+  font-size:1rem;
+  line-height:60px;
+}
+
+.field input[type="date"]::-webkit-date-and-time-value,
+.field input[type="time"]::-webkit-date-and-time-value {
+  text-align:center;
+  min-height:0;
+}
+
+/* Remove oversized native affordances that push inputs outside the card */
+.field input[type="date"]::-webkit-calendar-picker-indicator,
+.field input[type="time"]::-webkit-calendar-picker-indicator {
+  margin:0;
+  padding:0;
+  opacity:.65;
+}
+
+@media (max-width:650px) {
+  .page-shell {
+    padding:14px 10px calc(28px + env(safe-area-inset-bottom));
+  }
+
+  .brand-pill {
+    margin-bottom:14px;
+    padding:9px 12px;
+    font-size:.72rem;
+    letter-spacing:.10em;
+  }
+
+  .plan-screen {
+    padding:28px 16px 26px !important;
+    border-radius:28px;
+  }
+
+  .plan-screen .mini-pill {
+    margin-bottom:22px;
+    padding:9px 14px;
+    font-size:.76rem;
+    letter-spacing:.12em;
+  }
+
+  .plan-title {
+    max-width:100%;
+    margin:0 auto 30px;
+    font-size:clamp(2.45rem, 11vw, 3.35rem);
+    line-height:.96;
+    letter-spacing:-.04em;
+    text-align:center;
+  }
+
+  .field-grid {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:20px;
+  }
+
+  .field span {
+    margin:0 0 10px;
+    font-size:.9rem;
+    letter-spacing:.10em;
+    text-align:left;
+  }
+
+  .field input[type="date"],
+  .field input[type="time"] {
+    height:58px;
+    line-height:58px;
+    border-radius:16px;
+    padding-left:14px;
+    padding-right:14px;
+    font-size:1rem;
+  }
+
+  .plan-options {
+    padding:26px 0 18px !important;
+  }
+
+  .plan-options legend {
+    padding-top:12px !important;
+    margin-bottom:2px;
+    text-align:center;
+  }
+
+  .submit-plan-btn {
+    max-width:100%;
+  }
+}
+
+@media (max-width:390px) {
+  .plan-screen {
+    padding-left:14px !important;
+    padding-right:14px !important;
+  }
+
+  .plan-title {
+    font-size:clamp(2.25rem, 10.7vw, 3rem);
+  }
+
+  .field input[type="date"],
+  .field input[type="time"] {
+    height:56px;
+    line-height:56px;
+  }
+
+  .plan-chip {
+    padding:12px 16px !important;
+    font-size:.94rem;
+  }
+}
+
+</style>
+</head>
+<body>
+  <main class="page-shell">
+    <div class="brand-pill" aria-label="Brand">
+      <span class="brand-flower">✿</span>
+      <span>A LITTLE LOVE, MADE JUST FOR YOU 💗</span>
+    </div>
+
+    <!-- STEP 1: ASK -->
+    <section id="askScreen" class="screen active ask-screen" aria-labelledby="askTitle">
+      <div id="dodgeBadge" class="dodge-badge" hidden>1 dodge</div>
+
+      <p class="eyebrow">A TINY ASK</p>
+
+      <h1 id="askTitle" class="hero-title">
+        Will you go<br />
+        <em>out</em> with me?
+      </h1>
+
+      <p id="teaseText" class="tease-text">Catch No if you can.</p>
+
+      <div class="flower-wrap" aria-hidden="true">
+        <svg class="flower" viewBox="0 0 320 300">
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M162 170 C162 210,155 245,157 282" stroke="#4e534c" stroke-width="3"/>
+            <path d="M159 226 C182 215,205 205,230 205" stroke="#64715f" stroke-width="2"/>
+            <ellipse cx="178" cy="104" rx="45" ry="75" fill="#f2b6aa" fill-opacity=".55" stroke="#cf8174" stroke-width="2" transform="rotate(-6 178 104)"/>
+            <ellipse cx="108" cy="147" rx="66" ry="38" fill="#f2b6aa" fill-opacity=".55" stroke="#cf8174" stroke-width="2" transform="rotate(24 108 147)"/>
+            <ellipse cx="226" cy="159" rx="68" ry="36" fill="#f2b6aa" fill-opacity=".55" stroke="#cf8174" stroke-width="2" transform="rotate(-8 226 159)"/>
+            <ellipse cx="114" cy="218" rx="55" ry="34" fill="#f2b6aa" fill-opacity=".55" stroke="#cf8174" stroke-width="2" transform="rotate(-48 114 218)"/>
+            <ellipse cx="181" cy="208" rx="54" ry="34" fill="#f2b6aa" fill-opacity=".45" stroke="#cf8174" stroke-width="2" transform="rotate(62 181 208)"/>
+            <ellipse cx="208" cy="233" rx="45" ry="24" fill="#a7c39c" fill-opacity=".55" stroke="#6f9369" stroke-width="2" transform="rotate(-38 208 233)"/>
+            <circle cx="160" cy="169" r="23" fill="#e89b8e" fill-opacity=".35" stroke="#c56f64" stroke-width="2"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="choice-zone" id="choiceZone">
+        <button id="yesBtn" class="yes-btn" type="button">YES 🧸</button>
+        <button id="noBtn" class="no-btn" type="button">No</button>
+      </div>
+    </section>
+
+    <!-- STEP 2: CONFIRMED -->
+    <section id="confirmedScreen" class="screen" aria-labelledby="confirmedTitle">
+      <div class="confirmation-card">
+        <p class="mini-pill">DATE CONFIRMED</p>
+        <h2 id="confirmedTitle" class="confirmed-title">Yay — it’s a <em>date</em>.</h2>
+
+        <div class="flower-wrap compact" aria-hidden="true">
+          <svg class="flower" viewBox="0 0 320 300">
+            <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M162 170 C162 210,155 245,157 282" stroke="#4e534c" stroke-width="3"/>
+              <ellipse cx="178" cy="104" rx="45" ry="75" fill="#f2b6aa" fill-opacity=".55" stroke="#cf8174" stroke-width="2" transform="rotate(-6 178 104)"/>
+              <ellipse cx="108" cy="147" rx="66" ry="38" fill="#f2b6aa" fill-opacity=".55" stroke="#cf8174" stroke-width="2" transform="rotate(24 108 147)"/>
+              <ellipse cx="226" cy="159" rx="68" ry="36" fill="#f2b6aa" fill-opacity=".55" stroke="#cf8174" stroke-width="2" transform="rotate(-8 226 159)"/>
+              <ellipse cx="114" cy="218" rx="55" ry="34" fill="#f2b6aa" fill-opacity=".55" stroke="#cf8174" stroke-width="2" transform="rotate(-48 114 218)"/>
+              <ellipse cx="181" cy="208" rx="54" ry="34" fill="#f2b6aa" fill-opacity=".45" stroke="#cf8174" stroke-width="2" transform="rotate(62 181 208)"/>
+              <ellipse cx="208" cy="233" rx="45" ry="24" fill="#a7c39c" fill-opacity=".55" stroke="#6f9369" stroke-width="2" transform="rotate(-38 208 233)"/>
+              <circle cx="160" cy="169" r="23" fill="#e89b8e" fill-opacity=".35" stroke="#c56f64" stroke-width="2"/>
+            </g>
+          </svg>
+        </div>
+
+        <p class="taste-line">I knew you had great taste 😎</p>
+        <button id="planItBtn" class="primary-red-btn" type="button">Now let’s plan it → 🗓️</button>
+      </div>
+    </section>
+
+    <!-- STEP 3: PLAN -->
+    <section id="planScreen" class="screen plan-screen" aria-labelledby="planTitle">
+      <p class="mini-pill">LET'S MAKE IT OFFICIAL</p>
+      <h2 id="planTitle" class="plan-title">
+        Pick the <em>day,</em><br class="mobile-break" />
+        <em>time</em> &amp; plan
+      </h2>
+
+      <form id="dateForm" class="date-form" action="letter-v3.html" method="get">
+        <div class="field-grid">
+          <label class="field">
+            <span>WHICH DAY?</span>
+            <input id="dateInput" name="date" type="date" required />
+          </label>
+
+          <label class="field">
+            <span>WHAT TIME?</span>
+            <input id="timeInput" name="time" type="time" required />
+          </label>
+        </div>
+
+        <fieldset class="plan-options">
+          <legend>THE PLAN</legend>
+
+          <button type="submit" class="plan-chip" name="plan" value="Coffee">☕ Coffee</button>
+          <button type="submit" class="plan-chip" name="plan" value="A movie">🎬 A movie</button>
+          <button type="submit" class="plan-chip" name="plan" value="Dinner">🍝 Dinner</button>
+          <button type="submit" class="plan-chip" name="plan" value="Walk in the park">🌳 Walk in the park</button>
+          <button type="submit" class="plan-chip" name="plan" value="Drinks">🍸 Drinks</button>
+          <button type="submit" class="plan-chip" name="plan" value="Surprise me">🎁 Surprise me</button>
+        </fieldset>
+
+        <button id="submitPlanBtn" type="button" class="submit-plan-btn" onclick="alert('Tap one of the plan buttons above 💌')">
+          Tap a plan to continue 💌
+        </button>
+      </form>
+    </section>
+
+    <!-- STEP 4: LETTER -->
+    <section id="letterScreen" class="screen letter-screen" aria-labelledby="letterScreenTitle">
+      <div class="letter-inner">
+        <p class="letter-heading-pill" id="letterScreenTitle">A LITTLE LETTER FOR YOU</p>
+
+        <div class="letter-meta">
+          <span id="letterDateChip">📅 Saturday, Sep 26</span>
+          <span id="letterTimeChip">⏰ 7:30 PM</span>
+          <span id="letterPlanChip">🍝 Dinner</span>
+        </div>
+
+        <div class="letter-paper">
+          <p>Dear you,</p>
+
+          <p>So... it’s official. It’s a date! 💫</p>
+
+          <p id="letterMeetLine">Let’s meet Saturday, Sep 26 at 7:30 PM, for dinner. 🍝</p>
+
+          <p>I promise good vibes, terrible jokes, and my very best self.</p>
+
+          <p>I already can’t stop smiling. See you there.</p>
+
+          <p>Yours (a little nervously),</p>
+
+          <p>— Me 💌</p>
+        </div>
+
+        <button id="shareNewsBtn" class="share-news-btn" type="button">Share the good news 💌</button>
+        <button id="exitLetterBtn" class="exit-letter-btn" type="button">Exit ↻</button>
+        <p id="letterShareStatus" class="letter-share-status" role="status"></p>
+      </div>
+    </section>
+
+    <!-- STEP 5: PUZZLE -->
+    <section id="puzzleScreen" class="screen puzzle-screen" aria-labelledby="puzzleTitle">
+      <h2 id="puzzleTitle" class="puzzle-title">Almost there,<br><span id="inviteeNamePuzzle">Naomi</span>…</h2>
+      <p class="puzzle-subtitle">A little challenge to unlock your surprise.</p>
+
+      <div class="glass-cube" aria-hidden="true">
+        <span class="cube-dot dot-a">✦</span>
+        <span class="cube-dot dot-b">✦</span>
+        <span class="cube-dot dot-c">✦</span>
+      </div>
+
+      <button id="openSurpriseBtn" class="open-surprise-btn" type="button">Open your surprise ✨</button>
+
+      <div id="puzzleArea" class="puzzle-area hidden">
+        <h3>Solve this to unlock</h3>
+        <p class="puzzle-copy">What has keys but can’t open locks?</p>
+
+        <form id="puzzleForm" class="puzzle-form">
+          <input id="puzzleAnswer" type="text" placeholder="Your answer…" autocomplete="off" required />
+          <button type="submit" class="puzzle-submit">Submit →</button>
+        </form>
+        <p id="puzzleHint" class="puzzle-hint" role="status"></p>
+      </div>
+    </section>
+
+    <!-- STEP 5: ENVELOPE -->
+    <section id="envelopeScreen" class="screen envelope-screen" aria-labelledby="envelopeTitle">
+      <div class="envelope-stage">
+        <div class="heart-float h1">💕</div>
+        <div class="heart-float h2">💖</div>
+        <div class="heart-float h3">💗</div>
+
+        <h2 id="envelopeTitle" class="sr-only">Open your invitation</h2>
+
+        <button id="envelopeBtn" class="envelope-button" type="button" aria-label="Open envelope">
+          <span class="envelope-back"></span>
+          <span class="letter-card">
+            <span class="letter-flower">🌼</span>
+            <span class="letter-line strong">IT’S A DATE</span>
+            <span class="letter-line">For: <strong id="inviteeOnCard">Naomi</strong> 💕</span>
+            <span class="letter-line" id="letterDetails">Friday • 7:30 PM</span>
+          </span>
+          <span class="envelope-front"></span>
+          <span class="envelope-flap"></span>
+        </button>
+
+        <p class="envelope-prompt">Tap the envelope to open your invite 💌</p>
+      </div>
+    </section>
+
+    <!-- STEP 6: FINAL CARD -->
+    <section id="finalScreen" class="screen final-screen" aria-labelledby="finalTitle">
+      <div class="final-card-romance">
+        <h2 id="finalTitle">It’s a Date!</h2>
+        <div class="small-heart">♡</div>
+
+        <div class="paper-invite">
+          <p class="invite-kicker">A LITTLE INVITE FOR</p>
+          <h3 id="inviteeFinal">Naomi</h3>
+          <p class="invite-note">You + Me =<br>Pretty Good Plan.</p>
+
+          <div class="invite-rule"></div>
+
+          <div class="invite-details">
+            <div><span>WHEN</span><strong id="whenFinal">FRIDAY 26 SEPTEMBER • 7:30 PM</strong></div>
+            <div><span>PLAN</span><strong id="planFinal">DINNER</strong></div>
+            <div><span>DRESS CODE</span><strong>JUST BRING THAT SMILE 🙂</strong></div>
+          </div>
+
+          <div class="invite-rule"></div>
+
+          <div class="signature-wrap">
+            <span>SEE YOU THERE,</span>
+            <strong id="fromFinal">Marcos ♡</strong>
+          </div>
+        </div>
+
+        <div class="final-actions">
+          <button id="calendarBtn" class="secondary-btn" type="button">Add to calendar 📅</button>
+          <button id="copyBtn" class="secondary-btn" type="button">Copy details</button>
+          <button id="restartBtn" class="primary-red-btn" type="button">Start over</button>
+        </div>
+        <p id="copyStatus" class="copy-status" role="status"></p>
+      </div>
+    </section>
+  </main>
+
+  <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+  <script>
+const CONFIG = {
+  invitee: "Naomi",
+  inviter: "Marcos",
+  puzzleAnswer: "piano",
+  defaultDate: "2026-09-26",
+  defaultTime: "19:30"
+};
+
+const screens = [...document.querySelectorAll(".screen")];
+const askScreen = document.getElementById("askScreen");
+const confirmedScreen = document.getElementById("confirmedScreen");
+const planScreen = document.getElementById("planScreen");
+const letterScreen = document.getElementById("letterScreen");
+const puzzleScreen = document.getElementById("puzzleScreen");
+const envelopeScreen = document.getElementById("envelopeScreen");
+const finalScreen = document.getElementById("finalScreen");
+
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const choiceZone = document.getElementById("choiceZone");
+const dodgeBadge = document.getElementById("dodgeBadge");
+const teaseText = document.getElementById("teaseText");
+const planItBtn = document.getElementById("planItBtn");
+const dateForm = document.getElementById("dateForm");
+const dateInput = document.getElementById("dateInput");
+const timeInput = document.getElementById("timeInput");
+const shareNewsBtn = document.getElementById("shareNewsBtn");
+const exitLetterBtn = document.getElementById("exitLetterBtn");
+const letterShareStatus = document.getElementById("letterShareStatus");
+const openSurpriseBtn = document.getElementById("openSurpriseBtn");
+const puzzleArea = document.getElementById("puzzleArea");
+const puzzleForm = document.getElementById("puzzleForm");
+const puzzleAnswer = document.getElementById("puzzleAnswer");
+const puzzleHint = document.getElementById("puzzleHint");
+const envelopeBtn = document.getElementById("envelopeBtn");
+const restartBtn = document.getElementById("restartBtn");
+const copyBtn = document.getElementById("copyBtn");
+const calendarBtn = document.getElementById("calendarBtn");
+const copyStatus = document.getElementById("copyStatus");
+const confettiLayer = document.getElementById("confettiLayer");
+
+document.getElementById("inviteeNamePuzzle").textContent = CONFIG.invitee;
+document.getElementById("inviteeOnCard").textContent = CONFIG.invitee;
+document.getElementById("inviteeFinal").textContent = CONFIG.invitee;
+document.getElementById("fromFinal").textContent = `${CONFIG.inviter} ♡`;
+
+dateInput.value = CONFIG.defaultDate;
+timeInput.value = CONFIG.defaultTime;
+
+let dodgeCount = 0;
+let chosenDate = CONFIG.defaultDate;
+let chosenTime = CONFIG.defaultTime;
+let chosenPlan = "";
+
+const dodgeMessages = [
+  "Nice try — it dodged you.",
+  "Faster than romance.",
+  "No is wilting…",
+  "Yes is blooming, hm? 🌸",
+  "Last chance… 👀",
+  "So shy."
+];
+
+const dodgeButtonLabels = [
+  "Sure?",
+  "Wait—",
+  "Think again!",
+  "Last chance?",
+  "Maybe?",
+  "Nice try"
+];
+
+function showScreen(screen) {
+  screens.forEach(s => s.classList.remove("active"));
+  screen.classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function dodgeNoButton() {
+  dodgeCount += 1;
+  dodgeBadge.hidden = false;
+  dodgeBadge.textContent = `${dodgeCount} ${dodgeCount === 1 ? "dodge" : "dodges"}`;
+  teaseText.textContent = dodgeMessages[(dodgeCount - 1) % dodgeMessages.length];
+  noBtn.textContent = dodgeButtonLabels[(dodgeCount - 1) % dodgeButtonLabels.length];
+
+  const zoneRect = choiceZone.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
+  const maxX = Math.max(0, zoneRect.width - btnRect.width);
+  const maxY = Math.max(0, zoneRect.height - btnRect.height);
+
+  const x = Math.floor(Math.random() * maxX);
+  const y = Math.floor(Math.random() * maxY);
+
+  noBtn.style.left = `${x}px`;
+  noBtn.style.right = "auto";
+  noBtn.style.top = `${y}px`;
+  noBtn.style.transform = `rotate(${(Math.random() * 14) - 7}deg)`;
+}
+
+/*
+  Important mobile fix:
+  Move the No button only AFTER the browser has completed the tap/click.
+  We do not move it on touchstart/pointerdown, so the finger release can
+  never fall through to the YES button underneath.
+*/
+noBtn.addEventListener("click", function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+
+  setTimeout(function () {
+    dodgeNoButton();
+  }, 0);
+
+  return false;
+});
+
+yesBtn.addEventListener("click", () => {
+  burstConfetti(["💖","✨","💕","🌸"]);
+  showScreen(confirmedScreen);
+});
+
+planItBtn.addEventListener("click", () => showScreen(planScreen));
+
+const planButtons = [...document.querySelectorAll(".plan-chip")];
+
+function selectPlan(button) {
+  chosenPlan = button.dataset.plan || "";
+  planButtons.forEach(btn => {
+    const selected = btn === button;
+    btn.classList.toggle("selected", selected);
+    btn.setAttribute("aria-pressed", selected ? "true" : "false");
+  });
+}
+
+function choosePlanAndOpenLetter(plan, button) {
+  if (!dateInput.value || !timeInput.value) {
+    alert("Please choose the day and time first 💌");
+    return;
+  }
+
+  chosenDate = dateInput.value;
+  chosenTime = timeInput.value;
+  chosenPlan = plan;
+
+  if (button) selectPlan(button);
+  updateDynamicDetails();
+  updateLetterScreen();
+  showScreen(letterScreen);
+  burstConfetti(["💖","💕","✨","🌸"]);
+}
+
+window.choosePlanAndOpenLetter = choosePlanAndOpenLetter;
+
+dateForm.addEventListener("submit", e => {
+  // Let native form submission open letter.html.
+});
+
+openSurpriseBtn.addEventListener("click", () => {
+  puzzleArea.classList.remove("hidden");
+  puzzleAnswer.focus();
+});
+
+puzzleForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const answer = puzzleAnswer.value.trim().toLowerCase();
+
+  const accepted = [
+    CONFIG.puzzleAnswer.toLowerCase(),
+    "a piano",
+    "keyboard",
+    "a keyboard"
+  ];
+
+  if (accepted.includes(answer)) {
+    puzzleHint.textContent = "Unlocked! 💖";
+    burstConfetti(["✨","💗","🌼"]);
+    setTimeout(() => showScreen(envelopeScreen), 500);
+  } else {
+    puzzleHint.textContent = "Hint: it can make music 🎹";
+    puzzleAnswer.select();
+  }
+});
+
+envelopeBtn.addEventListener("click", () => {
+  if (!envelopeBtn.classList.contains("open")) {
+    envelopeBtn.classList.add("open");
+    burstConfetti(["💕","💗","💖","✨"]);
+    setTimeout(() => showScreen(finalScreen), 1500);
+  }
+});
+
+restartBtn.addEventListener("click", () => {
+  dodgeCount = 0;
+  dodgeBadge.hidden = true;
+  teaseText.textContent = "Catch No if you can.";
+  noBtn.textContent = "No";
+  noBtn.removeAttribute("style");
+  envelopeBtn.classList.remove("open");
+  puzzleArea.classList.add("hidden");
+  puzzleHint.textContent = "";
+  puzzleAnswer.value = "";
+  chosenPlan = "";
+  planButtons.forEach(btn => {
+    btn.classList.remove("selected");
+    btn.setAttribute("aria-pressed", "false");
+  });
+  showScreen(askScreen);
+});
+
+copyBtn.addEventListener("click", async () => {
+  const text = buildShareText();
+  try {
+    await navigator.clipboard.writeText(text);
+    copyStatus.textContent = "Copied 💌";
+  } catch {
+    copyStatus.textContent = text;
+  }
+});
+
+calendarBtn.addEventListener("click", () => {
+  const ics = buildICS();
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "our-date.ics";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+});
+
+function parseLocalDateTime(dateStr, timeStr) {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const [hh, mm] = timeStr.split(":").map(Number);
+  return new Date(y, m - 1, d, hh, mm, 0);
+}
+
+function updateDynamicDetails() {
+  const dt = parseLocalDateTime(chosenDate, chosenTime);
+  const dateLong = new Intl.DateTimeFormat("en-AU", {
+    weekday: "long", day: "numeric", month: "long"
+  }).format(dt);
+  const timeLong = new Intl.DateTimeFormat("en-AU", {
+    hour: "numeric", minute: "2-digit"
+  }).format(dt);
+
+  document.getElementById("letterDetails").textContent = `${dateLong} • ${timeLong}`;
+  document.getElementById("whenFinal").textContent = `${dateLong.toUpperCase()} • ${timeLong.toUpperCase()}`;
+  document.getElementById("planFinal").textContent = chosenPlan.toUpperCase();
+}
+
+function planIcon(plan) {
+  return {
+    "Coffee":"☕",
+    "A movie":"🎬",
+    "Dinner":"🍝",
+    "Walk in the park":"🌳",
+    "Drinks":"🍸",
+    "Surprise me":"🎁"
+  }[plan] || "💌";
+}
+
+function updateLetterScreen() {
+  const dt = parseLocalDateTime(chosenDate, chosenTime);
+  const dateChip = new Intl.DateTimeFormat("en-AU", {
+    weekday:"long", month:"short", day:"numeric"
+  }).format(dt);
+  const timeChip = new Intl.DateTimeFormat("en-AU", {
+    hour:"numeric", minute:"2-digit"
+  }).format(dt);
+
+  const planLower = chosenPlan.toLowerCase();
+  document.getElementById("letterDateChip").textContent = "📅 " + dateChip;
+  document.getElementById("letterTimeChip").textContent = "⏰ " + timeChip;
+  document.getElementById("letterPlanChip").textContent = planIcon(chosenPlan) + " " + chosenPlan;
+  document.getElementById("letterMeetLine").textContent =
+    "Let’s meet " + dateChip + " at " + timeChip + ", for " + planLower + ". " + planIcon(chosenPlan);
+}
+
+exitLetterBtn.addEventListener("click", () => showScreen(planScreen));
+
+shareNewsBtn.addEventListener("click", async () => {
+  const text = buildShareText();
+  try {
+    if (navigator.share) {
+      await navigator.share({ title:"It’s a date! 💕", text });
+      letterShareStatus.textContent = "Shared 💕";
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(text);
+      letterShareStatus.textContent = "Copied — ready to share 💌";
+    } else {
+      letterShareStatus.textContent = text;
+    }
+  } catch (err) {
+    if (err && err.name === "AbortError") return;
+    letterShareStatus.textContent = "Couldn’t open sharing. Try again.";
+  }
+});
+
+function buildShareText() {
+  const dt = parseLocalDateTime(chosenDate, chosenTime);
+  const dateLong = new Intl.DateTimeFormat("en-AU", {
+    weekday: "long", day: "numeric", month: "long", year: "numeric"
+  }).format(dt);
+  const timeLong = new Intl.DateTimeFormat("en-AU", {
+    hour: "numeric", minute: "2-digit"
+  }).format(dt);
+
+  return `It’s a date! 💕\nFor: ${CONFIG.invitee}\nWhen: ${dateLong} at ${timeLong}\nPlan: ${chosenPlan}\nFrom: ${CONFIG.inviter} ♡`;
+}
+
+function toICSLocal(date) {
+  const pad = n => String(n).padStart(2, "0");
+  return `${date.getFullYear()}${pad(date.getMonth()+1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}00`;
+}
+
+function buildICS() {
+  const start = parseLocalDateTime(chosenDate, chosenTime);
+  const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+  const stamp = new Date();
+
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Tiny Ask//Date Invite//EN",
+    "CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT",
+    `UID:${Date.now()}@tinyask.local`,
+    `DTSTAMP:${toICSLocal(stamp)}`,
+    `DTSTART:${toICSLocal(start)}`,
+    `DTEND:${toICSLocal(end)}`,
+    `SUMMARY:Date with ${CONFIG.inviter}`,
+    `DESCRIPTION:${chosenPlan} with ${CONFIG.inviter} 💕`,
+    "END:VEVENT",
+    "END:VCALENDAR"
+  ].join("\r\n");
+}
+
+function burstConfetti(symbols) {
+  for (let i = 0; i < 26; i++) {
+    const item = document.createElement("span");
+    item.className = "confetti";
+    item.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    item.style.left = `${Math.random() * 100}%`;
+    item.style.fontSize = `${16 + Math.random() * 24}px`;
+    item.style.animationDelay = `${Math.random() * .6}s`;
+    item.style.animationDuration = `${2 + Math.random() * 1.8}s`;
+    confettiLayer.appendChild(item);
+    setTimeout(() => item.remove(), 4500);
+  }
+}
+
+updateDynamicDetails();
+
+</script>
+</body>
+</html>
