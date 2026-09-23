@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f7e8ea">
+<title>A Little Letter For You 💌 — V12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,600&family=Nunito+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+:root{--rose:#b84f61;--rose-dark:#8f3748;--cream:#fffaf5;--paper:#fffdf9;--ink:#34282b;--muted:#806d72;--sage:#e1eadc;--shadow:0 28px 80px rgba(100,52,64,.16)}
+html{min-height:100%;background:#f8e8ea;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;min-height:100vh;padding:18px 10px 42px;font-family:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 12% 12%,rgba(255,255,255,.94),transparent 26%),radial-gradient(circle at 90% 20%,rgba(235,185,196,.48),transparent 24%),radial-gradient(circle at 52% 88%,rgba(225,234,220,.60),transparent 28%),linear-gradient(145deg,#faeeee,#f2dde1 48%,#f8eee8);overflow-x:hidden}
+.wrap{max-width:880px;margin:auto;position:relative;z-index:1}.brand{width:max-content;max-width:94%;margin:0 auto 18px;padding:10px 18px;border-radius:999px;border:1px solid rgba(184,79,97,.22);background:rgba(255,255,255,.58);backdrop-filter:blur(12px);box-shadow:0 10px 28px rgba(103,58,69,.07);color:#9d4557;font-size:.72rem;font-weight:800;letter-spacing:.13em;text-align:center}
+.card{position:relative;overflow:hidden;background:linear-gradient(155deg,rgba(255,253,249,.97),rgba(255,247,247,.91));border:1px solid rgba(255,255,255,.82);border-radius:32px;padding:26px 14px 24px;box-shadow:var(--shadow)}
+.card:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.6;background:radial-gradient(circle at 10% 14%,rgba(184,79,97,.10) 0 2px,transparent 3px),radial-gradient(circle at 90% 16%,rgba(184,79,97,.08) 0 2px,transparent 3px);background-size:54px 54px,72px 72px}.inner{position:relative;z-index:1}.heading{width:max-content;max-width:100%;margin:0 auto 18px;padding:9px 14px;border-radius:999px;border:1px solid rgba(121,75,85,.16);background:#fff;color:#886b72;font-size:.72rem;font-weight:800;letter-spacing:.14em}.meta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:20px}.meta span{padding:9px 11px;border-radius:999px;background:var(--sage);color:#48604a;font-size:.8rem;font-weight:800;box-shadow:0 6px 14px rgba(67,93,67,.05)}
+.letter{position:relative;max-width:720px;margin:0 auto;padding:28px 20px;border-radius:24px;border:1px solid rgba(184,79,97,.10);background:rgba(255,255,255,.85);box-shadow:0 18px 36px rgba(91,50,60,.07);font:1.09rem/1.6 Georgia,"Times New Roman",serif;color:#3b3033}.letter:before{content:"♡";position:absolute;right:18px;top:12px;color:#d79eaa;font-size:1.35rem}.letter p{margin:0 0 19px}.letter p:last-child{margin-bottom:0}.letter p:first-child{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.65rem;font-weight:600;color:#9b4254}
+.share{display:block;width:min(420px,100%);margin:22px auto 10px;border:0;border-radius:18px;padding:16px 18px;color:#fff;font-weight:800;font-size:1rem;background:linear-gradient(135deg,#ad4457,#cc6879);box-shadow:0 14px 30px rgba(184,79,97,.24);touch-action:manipulation}.exit{display:block;margin:auto;border:0;background:transparent;color:#a15463;font-weight:800;padding:10px 18px;touch-action:manipulation}.status{text-align:center;min-height:22px;color:#87666d;font-size:.9rem;font-weight:700}
+.emoji-rain-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;transform:translateZ(0)}.emoji-drop{position:absolute;top:-12vh;user-select:none;-webkit-user-select:none;animation:emojiFall var(--duration,2.8s) linear forwards;filter:drop-shadow(0 3px 5px rgba(0,0,0,.10))}@keyframes emojiFall{0%{transform:translate3d(0,-10vh,0) rotate(0deg);opacity:0}8%{opacity:1}100%{transform:translate3d(var(--drift,0px),112vh,0) rotate(var(--spin,360deg));opacity:.95}}
+@media(max-width:650px){body{padding:12px 8px calc(28px + env(safe-area-inset-bottom))}.brand{font-size:.68rem;padding:9px 12px;margin-bottom:12px}.card{padding:22px 10px 20px;border-radius:26px}.heading{font-size:.68rem;letter-spacing:.11em}.meta{gap:7px}.meta span{font-size:.76rem;padding:8px 9px}.letter{padding:24px 16px;font-size:1.02rem}.letter p:first-child{font-size:1.5rem}.share{width:100%}}
+@media(min-width:800px){body{padding:34px 22px 64px}.card{padding:40px 46px 36px;border-radius:34px}.heading{font-size:.78rem}.meta span{font-size:.9rem;padding:10px 13px}.letter{padding:38px 40px;font-size:1.2rem}.letter p:first-child{font-size:1.9rem}.share{margin-top:28px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">♡ A LITTLE LOVE, MADE JUST FOR YOU 💗</div>
+  <section class="card">
+    <div class="inner">
+      <div class="heading">A LITTLE LETTER FOR YOU</div>
+      <div class="meta"><span id="dateChip">📅 Date</span><span id="timeChip">⏰ Time</span><span id="planChip">💌 Plan</span></div>
+      <div class="letter">
+        <p>Dear A🧸,</p>
+        <p>So... it’s official. It’s a date! 💫</p>
+        <p id="meetLine">Let’s meet soon 💌</p>
+        <p>I promise good vibes, terrible jokes, and my very best self.</p>
+        <p>I already can’t stop smiling. I will pick you up on time.</p>
+        <p>Yours (a little nervously),</p>
+        <p>— Me 💌</p>
+      </div>
+      <button class="share" id="shareBtn" type="button">Share the good news 💌</button>
+      <button class="exit" type="button" onclick="history.back()">Exit ↻</button>
+      <div class="status" id="status"></div>
+    </div>
+  </section>
+</div>
+<div id="emojiRainLayer" class="emoji-rain-layer" aria-hidden="true"></div>
+<script>
+(function(){
+  var params=new URLSearchParams(location.search),date=params.get("date")||"2026-09-26",time=params.get("time")||"19:30",plan=params.get("plan")||"Dinner";
+  function planIcon(p){var icons={"Coffee":"☕","A movie":"🎬","Dinner":"🍝","Walk in the park":"🌳","Crocodylus Park":"🐊","Drinks":"🍸","Surprise me":"🎁"};return icons[p]||"💌"}
+  function planEmojis(p){var sets={"Coffee":["☕","🥐","🍪","🤎","✨"],"A movie":["🎬","🍿","🎥","🎞️","⭐","✨"],"Dinner":["🍝","🍕","🍰","🍽️","🥂","❤️"],"Walk in the park":["🌸","🌼","🌷","🌿","🍃","🦋"],"Crocodylus Park":["🐊","🐍","🦎","🐢","🦘","🦜","🐒","🦋"],"Drinks":["🍸","🍹","🥂","🍓","✨","💫"],"Surprise me":["🎁","🎉","💝","✨","🎊","💕"]};return sets[p]||["💕","✨","💗"]}
+  function runEmojiRain(p){var layer=document.getElementById("emojiRainLayer");if(!layer)return;var emojis=planEmojis(p),count=30;for(var i=0;i<count;i++){var el=document.createElement("span");el.className="emoji-drop";el.textContent=emojis[Math.floor(Math.random()*emojis.length)];el.style.left=(Math.random()*96)+"%";el.style.fontSize=(20+Math.random()*20)+"px";el.style.animationDelay=(Math.random()*.8)+"s";el.style.setProperty("--duration",(2.2+Math.random()*1.6)+"s");el.style.setProperty("--drift",((-40+Math.random()*80).toFixed(0))+"px");el.style.setProperty("--spin",((180+Math.random()*540).toFixed(0))+"deg");layer.appendChild(el)}setTimeout(function(){layer.innerHTML=""},4800)}
+  function format(){var bits=date.split("-").map(Number),tbits=time.split(":").map(Number),d=new Date(bits[0],bits[1]-1,bits[2],tbits[0],tbits[1]||0,0),dateText=new Intl.DateTimeFormat("en-AU",{weekday:"long",month:"short",day:"numeric"}).format(d),timeText=new Intl.DateTimeFormat("en-AU",{hour:"numeric",minute:"2-digit"}).format(d);document.getElementById("dateChip").textContent="📅 "+dateText;document.getElementById("timeChip").textContent="⏰ "+timeText;document.getElementById("planChip").textContent=planIcon(plan)+" "+plan;document.getElementById("meetLine").textContent="Let’s meet "+dateText+" at "+timeText+", for "+plan.toLowerCase()+". "+planIcon(plan);var shareText="It’s a date! 💕\n"+dateText+" at "+timeText+"\nPlan: "+plan;document.getElementById("shareBtn").onclick=async function(){try{if(navigator.share){await navigator.share({title:"It’s a date! 💕",text:shareText});document.getElementById("status").textContent="Shared 💕"}else if(navigator.clipboard){await navigator.clipboard.writeText(shareText);document.getElementById("status").textContent="Copied — ready to share 💌"}else{document.getElementById("status").textContent=shareText}}catch(e){if(e&&e.name!=="AbortError")document.getElementById("status").textContent="Couldn’t open sharing. Try again."}}}
+  format();setTimeout(function(){runEmojiRain(plan)},180)
+})();
+</script>
+</body>
+</html>
